@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dao.ICourseDAO">
+	<select id="querynoexit" resultType="vo.Course">
+		select CNO,CName,Point
+		from class 
+		where CNO not in(select CNO 
+		from s_c 
+		<where>
+		<if test="SNO !=null ">
+		 SNO=#{SNO}
+		 </if>
+		 </where>
+		)
+		  <if test="course.CNO !=null and course.CNO !='' ">
+		  AND CNO=#{course.CNO}
+		  </if>
+		  <if test="course.CName !=null and course.CName !='' ">
+		  AND CName=#{course.CName}
+		  </if>
+		      ORDER BY #{page.sort} #{page.sortOrder} LIMIT #{begin},#{page.pageSize}
+	</select>
+	
+	<select id="queryexit" resultType="vo.Course">
+		select CNO,CName,Point
+		from class 
+		where CNO in(select CNO 
+		from s_c 
+		<where>
+		<if test="SNO !=null ">
+		 SNO=#{SNO}
+		 </if>
+		 </where>
+		)
+		  <if test="course.CNO !=null and course.CNO !='' ">
+		  AND CNO=#{course.CNO}
+		  </if>
+		  <if test="course.CName !=null and course.CName !='' ">
+		  AND CName=#{course.CName}
+		  </if>
+		    ORDER BY #{page.sort} #{page.sortOrder} LIMIT #{begin},#{page.pageSize}
+	</select>
+	
+	<select id="queryAll" resultType="vo.Course">
+		select CNO,CName,Point
+		from class 
+		<where >
+		  <if test="course.CNO !=null and course.CNO !='' ">
+		   CNO=#{course.CNO}
+		  </if>
+		  <if test="course.CName !=null and course.CName !='' ">
+		  AND CName=#{course.CName}
+		  </if>
+		   </where>
+		   ORDER BY #{page.sort} #{page.sortOrder} LIMIT #{begin},#{page.pageSize}
+	</select>
+	
+	<select id="search" resultType="vo.Course">
+		        
+		       select CNO,CName,Point
+		from class 
+		where CNO not in(select CNO 
+		from s_c 
+		<where>
+		<if test="SNO !=null ">
+		 SNO=#{SNO}
+		 </if>
+		 </where>
+		)
+	</select>
+	
+	<select id="count" resultType="vo.Course">
+		select CNO,CName,Point
+		from class 
+		where CNO not in(select CNO 
+		from s_c 
+		<where>
+		<if test="SNO !=null ">
+		 SNO=#{SNO}
+		 </if>
+		 </where>
+		)
+		  <if test="course.CNO !=null and course.CNO !='' ">
+		  AND CNO=#{course.CNO}
+		  </if>
+		  <if test="course.CName !=null and course.CName !='' ">
+		  AND CName=#{course.CName}
+		  </if>
+	</select>
+	
+	<select id="excount" resultType="vo.Course">
+	select CNO,CName,Point
+		from class 
+		where CNO in(select CNO 
+		from s_c 
+		<where>
+		<if test="SNO !=null ">
+		 SNO=#{SNO}
+		 </if>
+		 </where>
+		)
+		  <if test="course.CNO !=null and course.CNO !='' ">
+		  AND CNO=#{course.CNO}
+		  </if>
+		  <if test="course.CName !=null and course.CName !='' ">
+		  AND CName=#{course.CName}
+		  </if>
+	</select>
+	
+	<select id="classcount" resultType="vo.Course">
+		select CNO,CName,Point
+		from class 
+		<where >
+		  <if test="course.CNO !=null and course.CNO !='' ">
+		   CNO=#{course.CNO}
+		  </if>
+		  <if test="course.CName !=null and course.CName !='' ">
+		  AND CName=#{course.CName}
+		  </if>
+		   </where>
+	</select>
+	
+	
+	<insert id="addclass">
+	   insert into s_c(SNO, CNO,Score) 
+               values(#{SNO},#{CNO},NULL)
+	</insert>
+
+    <delete id="delclass">
+     delete from s_c where SNO=#{SNO} AND CNO=#{CNO}
+    </delete>
+    
+    <select id="get" resultType="vo.S_C">
+		select *
+		from s_c 
+		where  SNO=#{SNO} AND CNO=#{CNO}
+	</select>
+
+<select id="teacherclassnum" resultType="vo.S_C">
+		   SELECT b.SNO,b.userName,a.CNO,a.CName
+		   from `user`AS b,class AS a ,s_c
+		   where b.SNO=s_c.SNO AND a.CNO=s_c.CNO
+		   <if test="course.CNO !=null and course.CNO !='' ">
+		    AND CNO=#{course.CNO}
+		   </if>
+		   <if test="course.CName !=null and course.CName !='' ">
+		   AND CName=#{course.CName}
+		   </if>
+		   ORDER BY SNO ASC LIMIT #{begin},#{page.pageSize}
+	</select>
+	
+	<select id="teacherclassnumcount" resultType="vo.S_C">
+		  select class.CNO,class.CName,user.SNO,user.userName
+		   from user,class,s_c
+		  where user.SNO=s_c.SNO AND class.CNO=s_c.CNO
+		  <if test="course.CNO !=null and course.CNO !='' ">
+		  AND CNO=#{course.CNO}
+		  </if>
+		  <if test="course.CName !=null and course.CName !='' ">
+		  AND CName=#{course.CName}
+		  </if>
+	</select>
+	
+</mapper>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dao.IScoreDAO">
+	<select id="Score" resultType="vo.S_C">
+		select a.SNO,a.userName,b.CNO,b.CName,c.Score
+		from  user AS a,class AS b,s_c AS c
+		where a.SNO=c.SNO AND b.CNO=c.CNO
+		 <if test="user.SNO !=null and user.SNO !='' ">
+		  AND a.SNO=#{user.SNO} 
+		  </if>
+		  <if test="user.userName !=null and user.userName !='' ">
+		  AND a.userName=#{user.userName}
+		  </if>
+		   AND  c.Score>0
+		   ORDER BY SNO ASC LIMIT #{begin},#{page.pageSize}
+	</select>
+	
+	<select id="scorecount" resultType="vo.S_C">
+		select a.SNO,a.userName,b.CNO,b.CName,c.Score
+		from  user AS a,class AS b,s_c AS c
+		where a.SNO=c.SNO AND b.CNO=c.CNO
+		 <if test="user.SNO !=null and user.SNO !='' ">
+		  AND a.SNO=#{user.SNO}
+		  </if>
+		  <if test="user.userName !=null and user.userName !='' ">
+		  AND a.userName=#{user.userName}
+		  </if>
+		   AND  c.Score>0
+	</select>
+	
+	<select id="teacherclass" resultType="vo.S_C">
+		select a.SNO,a.userName,b.CNO,b.CName
+		from  user AS a,class AS b,T_C AS c
+		<where>
+		 a.SNO=c.SNO AND b.CNO=c.CNO
+		  <if test="user.SNO !=null and user.SNO !='' ">
+		  AND a.SNO=#{user.SNO} 
+		  </if>
+		  <if test="user.userName!=null and user.userName !='' ">
+		   AND a.userName=#{user.userName}
+		  </if>
+		</where>
+		   ORDER BY SNO ASC LIMIT #{begin},#{page.pageSize}
+		  
+	</select>
+	
+	<select id="teachercount" resultType="vo.S_C">
+		select a.SNO,a.userName,b.CNO,b.CName
+		from  user AS a,class AS b,T_C AS c
+		where a.SNO=c.SNO AND b.CNO=c.CNO
+		 <if test="user.SNO !=null and user.SNO !='' ">
+		  AND a.SNO=#{user.SNO}
+		  </if>
+		  <if test="user.userName !=null and user.userName !='' ">
+		    AND a.userName=#{user.userName}
+		  </if>
+	</select>
+	
+	<update id="updatescore">
+    update s_c set Score=#{Score} where SNO=#{SNO} AND CNO=#{CNO}
+   </update>
+   
+   <insert id="insertclass">
+	   insert into s_c(SNO, CNO,Score) 
+               values(#{SNO},#{CNO},#{Score})
+	</insert>
+
+</mapper>
